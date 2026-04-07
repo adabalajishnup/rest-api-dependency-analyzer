@@ -1,0 +1,6 @@
+pyyaml
+jsonschema
+openapi-spec-validator
+rich          # pretty CLI output
+networkx      # for dependency graph
+pytest
