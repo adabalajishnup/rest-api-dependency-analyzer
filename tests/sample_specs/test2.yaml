@@ -1,0 +1,175 @@
+openapi: "3.0.0"
+info:
+  title: Banking Core API
+  version: "1.0.0"
+
+paths:
+
+  /auth/register:
+    post:
+      operationId: registerUser
+      summary: Register new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: User registered
+
+  /auth/login:
+    post:
+      operationId: loginUser
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: JWT token issued
+
+  /accounts:
+    post:
+      operationId: createAccount
+      summary: Create bank account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Account"
+      responses:
+        "201":
+          description: Account created
+
+    get:
+      operationId: listAccounts
+      summary: List accounts
+      responses:
+        "200":
+          description: Accounts list
+
+  /accounts/{accountId}:
+    get:
+      operationId: getAccount
+      summary: Get account details
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Account details
+
+  /accounts/{accountId}/transactions:
+    get:
+      operationId: getTransactions
+      summary: Get account transactions
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Transaction list
+
+  /transactions:
+    post:
+      operationId: createTransaction
+      summary: Create transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Transaction"
+      responses:
+        "201":
+          description: Transaction created
+
+  /transactions/{transactionId}:
+    get:
+      operationId: getTransaction
+      summary: Get transaction details
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Transaction details
+
+  /users/{userId}/accounts:
+    get:
+      operationId: getUserAccounts
+      summary: Get accounts by user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User accounts
+
+components:
+
+  schemas:
+
+    RegisterRequest:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    Account:
+      type: object
+      required: [userId, type]
+      properties:
+        accountId:
+          type: string
+        userId:
+          type: string
+        type:
+          type: string
+        balance:
+          type: number
+
+    Transaction:
+      type: object
+      required: [accountId, amount]
+      properties:
+        transactionId:
+          type: string
+        accountId:
+          type: string
+        amount:
+          type: number
+        type:
+          type: string

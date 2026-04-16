@@ -1,0 +1,123 @@
+openapi: "3.0.0"
+info:
+  title: Order Management API
+  version: "1.0.0"
+
+paths:
+  /users:
+    post:
+      operationId: createUser
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: User created
+
+  /users/{userId}:
+    get:
+      operationId: getUser
+      summary: Get user details
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User details
+
+  /products:
+    get:
+      operationId: listProducts
+      summary: List all products
+      responses:
+        "200":
+          description: List of products
+
+  /orders:
+    post:
+      operationId: createOrder
+      summary: Create a new order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Order"
+      responses:
+        "201":
+          description: Order created
+
+  /orders/{orderId}:
+    get:
+      operationId: getOrder
+      summary: Get order details
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Order details
+
+  /orders/user/{userId}:
+    get:
+      operationId: getOrdersByUser
+      summary: Get all orders for a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Orders for user
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        userId:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+
+    Product:
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+
+    Order:
+      type: object
+      required:
+        - userId
+        - products
+      properties:
+        orderId:
+          type: string
+        userId:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"

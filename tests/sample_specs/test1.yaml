@@ -1,0 +1,206 @@
+openapi: "3.0.0"
+info:
+  title: E-Commerce Platform API
+  version: "2.0.0"
+
+paths:
+
+  /auth/login:
+    post:
+      operationId: loginUser
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: JWT token
+
+  /users:
+    post:
+      operationId: createUser
+      summary: Create user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: User created
+
+    get:
+      operationId: listUsers
+      summary: List users
+      parameters:
+        - name: role
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Users list
+
+  /users/{userId}:
+    get:
+      operationId: getUser
+      summary: Get user details
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User details
+
+    put:
+      operationId: updateUser
+      summary: Update user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated
+
+  /products:
+    get:
+      operationId: listProducts
+      summary: Get all products
+      responses:
+        "200":
+          description: Product list
+
+    post:
+      operationId: createProduct
+      summary: Create product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        "201":
+          description: Product created
+
+  /orders:
+    post:
+      operationId: createOrder
+      summary: Place order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Order"
+      responses:
+        "201":
+          description: Order placed
+
+    get:
+      operationId: listOrders
+      summary: Get all orders
+      responses:
+        "200":
+          description: Orders list
+
+  /orders/{orderId}:
+    get:
+      operationId: getOrder
+      summary: Get order by ID
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Order details
+
+  /orders/user/{userId}:
+    get:
+      operationId: getOrdersByUser
+      summary: Get orders by user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User orders
+
+components:
+
+  schemas:
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    User:
+      type: object
+      required: [name, email]
+      properties:
+        userId:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+
+    Product:
+      type: object
+      required: [name, price]
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+
+    Order:
+      type: object
+      required: [userId, products]
+      properties:
+        orderId:
+          type: string
+        userId:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
